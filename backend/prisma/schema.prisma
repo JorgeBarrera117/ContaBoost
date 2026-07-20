@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum AccountType {
+  ASSET       // Activo
+  LIABILITY   // Pasivo
+  EQUITY      // Capital/Patrimonio
+  REVENUE     // Ingresos
+  EXPENSE     // Gastos
+}
+
+model Account {
+  id          String        @id @default(uuid())
+  code        String        @unique // Código contable (ej. 1000, 1100)
+  name        String        // Nombre de la cuenta (ej. Caja, Bancos)
+  type        AccountType
+  isActive    Boolean       @default(true)
+  lines       JournalLine[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model JournalEntry {
+  id          String        @id @default(uuid())
+  date        DateTime      // Fecha de transacción
+  description String        // Concepto del asiento
+  reference   String?       // Documento de referencia (ej. Factura #123)
+  lines       JournalLine[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model JournalLine {
+  id             String       @id @default(uuid())
+  journalEntryId String
+  journalEntry   JournalEntry @relation(fields: [journalEntryId], references: [id])
+  accountId      String
+  account        Account      @relation(fields: [accountId], references: [id])
+  debit          Decimal      @default(0.00) @db.Decimal(12, 2)
+  credit         Decimal      @default(0.00) @db.Decimal(12, 2)
+  description    String?      // Concepto específico de la línea
+  
+  // En contabilidad no se eliminan registros financieros físicamente
+  isDeleted      Boolean      @default(false)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}

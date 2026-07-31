@@ -8,7 +8,7 @@ export function UserManagement() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [formData, setFormData] = useState({ nombre: '', email: '', password_hash: '', rol_id: 2 }); // 1=Admin, 2=Vendedor
+  const [formData, setFormData] = useState({ nombre: '', email: '', password: '', rol: 'Vendedor' }); // Vendedor or Administrador
   
   const { data: users, isLoading } = useQuery({ queryKey: ['users'], queryFn: getUsers });
 
@@ -17,20 +17,24 @@ export function UserManagement() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
       setIsModalOpen(false);
-      setFormData({ nombre: '', email: '', password_hash: '', rol_id: 2 });
+      setFormData({ nombre: '', email: '', password: '', rol: 'Vendedor' });
     }
   });
 
   const toggleStatusMutation = useMutation({
     mutationFn: ({ id, activo }: { id: number, activo: boolean }) => updateUserStatus(id, activo),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['users'] });
-    }
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['users'] })
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    createMutation.mutate({ ...formData, negocio_id: 1 }); // Default negocio_id
+    createMutation.mutate({ 
+      nombre: formData.nombre,
+      email: formData.email,
+      password_hash: formData.password,
+      rol_id: formData.rol === 'Administrador' ? 1 : 2,
+      negocio_id: 1 
+    }); 
   };
 
   if (isLoading) return <div className="loading-state">Cargando personal...</div>;

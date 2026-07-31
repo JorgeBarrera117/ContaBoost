@@ -17,7 +17,7 @@ import {
 export function Sidebar() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { tienePermiso, logout, user } = useAuth();
+  const { tienePermiso, logout } = useAuth();
 
   const handleLogout = () => {
     logout();

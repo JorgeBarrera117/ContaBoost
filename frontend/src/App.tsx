@@ -17,8 +17,7 @@ import { ProfitAndLoss } from './components/reports/ProfitAndLoss';
 import { BalanceSheet } from './components/reports/BalanceSheet';
 import { Sidebar } from './components/Sidebar';
 import { Dashboard } from './components/Dashboard';
-import { DashboardEmployee } from './components/DashboardEmployee';
-import { ReportsEmployee } from './components/ReportsEmployee';
+
 import { Login } from './components/Login';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { useAuth } from './context/AuthContext';

@@ -1,16 +1,8 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getInvoices, seedBilling } from '../api/invoices';
-import { useAuth } from '../context/AuthContext';
+import { useQuery } from '@tanstack/react-query';
+import { getInvoices } from '../api/invoices';
 
 export function InvoiceList() {
-  const queryClient = useQueryClient();
-  const { tienePermiso } = useAuth();
   const { data: invoices, isLoading } = useQuery({ queryKey: ['invoices'], queryFn: getInvoices });
-
-  const seedMutation = useMutation({
-    mutationFn: seedBilling,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['invoices'] }),
-  });
 
   if (isLoading) return <div className="loading-state">Cargando ventas...</div>;
 

@@ -1,9 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { getDashboardSummary } from '../api/dashboard';
 import { 
-  Bell, 
-  HelpCircle, 
-  Search,
   TrendingUp,
   Receipt,
   Landmark,
@@ -17,10 +14,8 @@ import {
   ResponsiveContainer, 
   Tooltip 
 } from 'recharts';
-import { useAuth } from '../context/AuthContext';
 
 export function Dashboard() {
-  const { user, roles } = useAuth();
   const { data, isLoading } = useQuery({
     queryKey: ['dashboardSummary'],
     queryFn: getDashboardSummary

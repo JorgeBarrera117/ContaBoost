@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Creamos una instancia configurada de Axios
 export const apiClient = axios.create({
-  baseURL: 'http://localhost:4000', // URL de nuestro backend NestJS (que corre en el puerto 4000)
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:4000', // API_URL de prod o localhost
   headers: {
     'Content-Type': 'application/json',
   },

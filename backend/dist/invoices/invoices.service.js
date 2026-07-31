@@ -81,7 +81,7 @@ let InvoicesService = class InvoicesService {
             const invoiceLinesData = [];
             const inventoryTransactionsData = [];
             for (const line of dto.lines) {
-                const [products] = await conn.query('SELECT id, name, cost, hasIva, stock FROM products WHERE id = ? FOR UPDATE', [line.productId]);
+                const [products] = await conn.query('SELECT id, name, cost, hasIva AS "hasIva", stock FROM products WHERE id = ? FOR UPDATE', [line.productId]);
                 if (products.length === 0)
                     throw new common_1.BadRequestException(`Producto ${line.productId} no encontrado`);
                 const product = products[0];

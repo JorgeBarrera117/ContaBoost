@@ -47,7 +47,7 @@ export class PurchasesService {
 
       for (const line of dto.lines) {
         const [products] = await conn.query<RowDataPacket[]>(
-          'SELECT id, hasIva FROM products WHERE id = ? FOR UPDATE',
+          'SELECT id, hasIva AS "hasIva" FROM products WHERE id = ? FOR UPDATE',
           [line.productId]
         );
         if (products.length === 0) throw new BadRequestException(`Producto no encontrado: ${line.productId}`);

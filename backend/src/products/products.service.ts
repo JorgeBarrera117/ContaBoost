@@ -58,7 +58,7 @@ export class ProductsService {
   }
 
   async findAll() {
-    const [rows] = await this.pool.query<RowDataPacket[]>('SELECT * FROM products ORDER BY name ASC');
+    const [rows] = await this.pool.query<RowDataPacket[]>('SELECT id, code, name, description, cost, price, hasIva AS "hasIva", stock FROM products ORDER BY name ASC');
     return rows;
   }
 

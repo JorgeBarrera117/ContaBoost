@@ -78,7 +78,7 @@ let PurchasesService = class PurchasesService {
                 await conn.query('INSERT INTO warehouses (id, code, name) VALUES (?, ?, ?)', [warehouseId, 'MATRIZ', 'Bodega Matriz']);
             }
             for (const line of dto.lines) {
-                const [products] = await conn.query('SELECT id, hasIva FROM products WHERE id = ? FOR UPDATE', [line.productId]);
+                const [products] = await conn.query('SELECT id, hasIva AS "hasIva" FROM products WHERE id = ? FOR UPDATE', [line.productId]);
                 if (products.length === 0)
                     throw new common_1.BadRequestException(`Producto no encontrado: ${line.productId}`);
                 const product = products[0];

@@ -94,11 +94,11 @@ let JournalService = class JournalService {
         }
     }
     async findAll() {
-        const [entries] = await this.pool.query(`SELECT je.*, u.nombre as userName 
+        const [entries] = await this.pool.query(`SELECT je.*, u.nombre as "userName" 
        FROM journal_entries je
        LEFT JOIN usuarios u ON je.userId = u.id
        ORDER BY je.date DESC`);
-        const [lines] = await this.pool.query(`SELECT jl.*, a.name as accountName, a.code as accountCode
+        const [lines] = await this.pool.query(`SELECT jl.*, a.name as "accountName", a.code as "accountCode"
        FROM journal_lines jl
        JOIN accounts a ON jl.accountId = a.id`);
         return entries.map(entry => {

@@ -11,7 +11,7 @@ export declare class AccountsController {
     }>;
     findAll(): Promise<import("mysql2").RowDataPacket[]>;
     seedEcuadorAccounts(): Promise<{
-        inserted: any;
+        inserted: number;
         message: string;
     }>;
 }

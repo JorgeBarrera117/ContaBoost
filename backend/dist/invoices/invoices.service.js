@@ -156,7 +156,7 @@ let InvoicesService = class InvoicesService {
         }
     }
     async findAll() {
-        const [rows] = await this.pool.query(`SELECT i.*, c.name as contactName, ep.code as emissionPointCode 
+        const [rows] = await this.pool.query(`SELECT i.*, c.name as "contactName", ep.code as "emissionPointCode" 
        FROM invoices i 
        JOIN contacts c ON i.contactId = c.id 
        JOIN emission_points ep ON i.emissionPointId = ep.id

@@ -11,7 +11,7 @@ export declare class AccountsService {
     }>;
     findAll(): Promise<RowDataPacket[]>;
     seedEcuadorAccounts(): Promise<{
-        inserted: any;
+        inserted: number;
         message: string;
     }>;
 }

@@ -20,16 +20,16 @@ let DashboardService = class DashboardService {
         this.pool = pool;
     }
     async getSummary() {
-        const [salesAgg] = await this.pool.query('SELECT SUM(total) as totalSales FROM invoices');
-        const [expensesAgg] = await this.pool.query('SELECT SUM(total) as totalExpenses FROM purchases');
+        const [salesAgg] = await this.pool.query('SELECT SUM(total) as "totalSales" FROM invoices');
+        const [expensesAgg] = await this.pool.query('SELECT SUM(total) as "totalExpenses" FROM purchases');
         const totalSales = Number(salesAgg[0].totalSales || 0);
         const totalExpenses = Number(expensesAgg[0].totalExpenses || 0);
         const netIncome = totalSales - totalExpenses;
-        const [lastInvoices] = await this.pool.query(`SELECT i.id, c.name as contactName, i.date, i.total 
+        const [lastInvoices] = await this.pool.query(`SELECT i.id, c.name as "contactName", i.date, i.total 
        FROM invoices i 
        JOIN contacts c ON i.contactId = c.id 
        ORDER BY i.date DESC LIMIT 5`);
-        const [lastPurchases] = await this.pool.query(`SELECT p.id, c.name as contactName, p.date, p.total 
+        const [lastPurchases] = await this.pool.query(`SELECT p.id, c.name as "contactName", p.date, p.total 
        FROM purchases p 
        JOIN contacts c ON p.contactId = c.id 
        ORDER BY p.date DESC LIMIT 5`);
@@ -74,7 +74,7 @@ let DashboardService = class DashboardService {
                 cashSession = sessions[0];
             }
         }
-        const [todayInvoices] = await this.pool.query(`SELECT i.id, i.invoiceNumber, i.date, i.total, i.paymentMethod, c.name as contactName
+        const [todayInvoices] = await this.pool.query(`SELECT i.id, i.invoiceNumber, i.date, i.total, i.paymentMethod, c.name as "contactName"
        FROM invoices i
        JOIN contacts c ON i.contactId = c.id
        WHERE i.date >= ?

@@ -23,20 +23,28 @@ export class AccountsService {
   }
 
   async seedEcuadorAccounts() {
-    // Generar IDs para cada cuenta y preparar el arreglo para inserción múltiple
-    const values = ecuadorChartOfAccounts.map(acc => [
-      crypto.randomUUID(), 
-      acc.code, 
-      acc.name, 
-      acc.type
-    ]);
+    let inserted = 0;
+    
+    // Inserción individual para compatibilidad con PostgreSQL y el wrapper
+    for (const acc of ecuadorChartOfAccounts) {
+      const id = crypto.randomUUID();
+      try {
+        const sql = `
+          INSERT INTO accounts (id, code, name, type) 
+          VALUES (?, ?, ?, ?) 
+          ON CONFLICT (code) DO NOTHING
+        `;
+        const [result]: any = await this.pool.query(sql, [id, acc.code, acc.name, acc.type]);
+        
+        // Verifica si insertId fue retornado o si filas fueron afectadas
+        if (result && result.insertId) {
+          inserted++;
+        }
+      } catch (err) {
+        console.error('Error seeding account:', acc.code, err);
+      }
+    }
 
-    // IGNORE omitirá errores de duplicidad de código
-    const [result]: any = await this.pool.query(
-      'INSERT IGNORE INTO accounts (id, code, name, type) VALUES ?',
-      [values]
-    );
-
-    return { inserted: result.affectedRows, message: 'Plan de cuentas cargado.' };
+    return { inserted, message: 'Plan de cuentas cargado o actualizado.' };
   }
 }

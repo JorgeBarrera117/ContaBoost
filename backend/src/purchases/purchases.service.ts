@@ -155,7 +155,7 @@ export class PurchasesService {
 
   async findAll() {
     const [rows] = await this.pool.query<RowDataPacket[]>(
-      `SELECT p.*, c.name as contactName 
+      `SELECT p.*, c.name as "contactName" 
        FROM purchases p 
        JOIN contacts c ON p.contactId = c.id 
        ORDER BY p.date DESC`

@@ -38,12 +38,12 @@ let ReportsService = class ReportsService {
         }
         const query = `
       SELECT 
-        a.id as accountId, 
-        a.code as accountCode, 
-        a.name as accountName, 
-        a.type as accountType,
-        SUM(jl.debit) as totalDebit, 
-        SUM(jl.credit) as totalCredit
+        a.id as "accountId", 
+        a.code as "accountCode", 
+        a.name as "accountName", 
+        a.type as "accountType",
+        SUM(jl.debit) as "totalDebit", 
+        SUM(jl.credit) as "totalCredit"
       FROM journal_lines jl
       JOIN journal_entries je ON jl.journalEntryId = je.id
       JOIN accounts a ON jl.accountId = a.id
@@ -106,12 +106,12 @@ let ReportsService = class ReportsService {
         }
         const query = `
       SELECT 
-        a.id as accountId, 
-        a.code as accountCode, 
-        a.name as accountName, 
-        a.type as accountType,
-        SUM(jl.debit) as totalDebit, 
-        SUM(jl.credit) as totalCredit
+        a.id as "accountId", 
+        a.code as "accountCode", 
+        a.name as "accountName", 
+        a.type as "accountType",
+        SUM(jl.debit) as "totalDebit", 
+        SUM(jl.credit) as "totalCredit"
       FROM journal_lines jl
       JOIN journal_entries je ON jl.journalEntryId = je.id
       JOIN accounts a ON jl.accountId = a.id
@@ -170,12 +170,12 @@ let ReportsService = class ReportsService {
         }
         const query = `
       SELECT 
-        a.id as accountId, 
-        a.code as accountCode, 
-        a.name as accountName, 
-        a.type as accountType,
-        SUM(jl.debit) as totalDebit, 
-        SUM(jl.credit) as totalCredit
+        a.id as "accountId", 
+        a.code as "accountCode", 
+        a.name as "accountName", 
+        a.type as "accountType",
+        SUM(jl.debit) as "totalDebit", 
+        SUM(jl.credit) as "totalCredit"
       FROM journal_lines jl
       JOIN journal_entries je ON jl.journalEntryId = je.id
       JOIN accounts a ON jl.accountId = a.id

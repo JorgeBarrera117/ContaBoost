@@ -7,8 +7,8 @@ export class DashboardService {
 
   async getSummary() {
     // 1. Calcular KPIs (Ventas, Gastos, Utilidad)
-    const [salesAgg] = await this.pool.query<RowDataPacket[]>('SELECT SUM(total) as totalSales FROM invoices');
-    const [expensesAgg] = await this.pool.query<RowDataPacket[]>('SELECT SUM(total) as totalExpenses FROM purchases');
+    const [salesAgg] = await this.pool.query<RowDataPacket[]>('SELECT SUM(total) as "totalSales" FROM invoices');
+    const [expensesAgg] = await this.pool.query<RowDataPacket[]>('SELECT SUM(total) as "totalExpenses" FROM purchases');
 
     const totalSales = Number(salesAgg[0].totalSales || 0);
     const totalExpenses = Number(expensesAgg[0].totalExpenses || 0);
@@ -16,14 +16,14 @@ export class DashboardService {
 
     // 2. Últimas Transacciones (Ventas y Compras combinadas)
     const [lastInvoices] = await this.pool.query<RowDataPacket[]>(
-      `SELECT i.id, c.name as contactName, i.date, i.total 
+      `SELECT i.id, c.name as "contactName", i.date, i.total 
        FROM invoices i 
        JOIN contacts c ON i.contactId = c.id 
        ORDER BY i.date DESC LIMIT 5`
     );
 
     const [lastPurchases] = await this.pool.query<RowDataPacket[]>(
-      `SELECT p.id, c.name as contactName, p.date, p.total 
+      `SELECT p.id, c.name as "contactName", p.date, p.total 
        FROM purchases p 
        JOIN contacts c ON p.contactId = c.id 
        ORDER BY p.date DESC LIMIT 5`
@@ -83,7 +83,7 @@ export class DashboardService {
     }
 
     const [todayInvoices] = await this.pool.query<RowDataPacket[]>(
-      `SELECT i.id, i.invoiceNumber, i.date, i.total, i.paymentMethod, c.name as contactName
+      `SELECT i.id, i.invoiceNumber, i.date, i.total, i.paymentMethod, c.name as "contactName"
        FROM invoices i
        JOIN contacts c ON i.contactId = c.id
        WHERE i.date >= ?

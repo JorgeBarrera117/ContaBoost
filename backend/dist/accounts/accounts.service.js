@@ -64,14 +64,25 @@ let AccountsService = class AccountsService {
         return rows;
     }
     async seedEcuadorAccounts() {
-        const values = accounts_seed_1.ecuadorChartOfAccounts.map(acc => [
-            crypto.randomUUID(),
-            acc.code,
-            acc.name,
-            acc.type
-        ]);
-        const [result] = await this.pool.query('INSERT IGNORE INTO accounts (id, code, name, type) VALUES ?', [values]);
-        return { inserted: result.affectedRows, message: 'Plan de cuentas cargado.' };
+        let inserted = 0;
+        for (const acc of accounts_seed_1.ecuadorChartOfAccounts) {
+            const id = crypto.randomUUID();
+            try {
+                const sql = `
+          INSERT INTO accounts (id, code, name, type) 
+          VALUES (?, ?, ?, ?) 
+          ON CONFLICT (code) DO NOTHING
+        `;
+                const [result] = await this.pool.query(sql, [id, acc.code, acc.name, acc.type]);
+                if (result && result.insertId) {
+                    inserted++;
+                }
+            }
+            catch (err) {
+                console.error('Error seeding account:', acc.code, err);
+            }
+        }
+        return { inserted, message: 'Plan de cuentas cargado o actualizado.' };
     }
 };
 exports.AccountsService = AccountsService;

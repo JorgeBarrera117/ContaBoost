@@ -24,7 +24,7 @@ export class InvoicesService {
 
       // 1. Obtener y bloquear Punto de Emisión (Secuencial SRI)
       const [emissionPoints] = await conn.query<RowDataPacket[]>(
-        `SELECT ep.id, ep.currentSequence 
+        `SELECT ep.id, ep.currentSequence AS "currentSequence" 
          FROM emission_points ep 
          JOIN establishments e ON ep.establishmentId = e.id 
          WHERE ep.code = ? AND e.code = ? FOR UPDATE`,

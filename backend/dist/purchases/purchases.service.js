@@ -141,7 +141,7 @@ let PurchasesService = class PurchasesService {
         }
     }
     async findAll() {
-        const [rows] = await this.pool.query(`SELECT p.*, c.name as "contactName" 
+        const [rows] = await this.pool.query(`SELECT p.id, p.date, p.purchaseNumber AS "purchaseNumber", p.subtotal, p.ivaAmount AS "ivaAmount", p.total, p.contactId AS "contactId", c.name as "contactName" 
        FROM purchases p 
        JOIN contacts c ON p.contactId = c.id 
        ORDER BY p.date DESC`);

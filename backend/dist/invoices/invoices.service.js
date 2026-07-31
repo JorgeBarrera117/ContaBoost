@@ -64,7 +64,7 @@ let InvoicesService = class InvoicesService {
             if (warehouses.length === 0)
                 throw new common_1.InternalServerErrorException('Bodega Principal no encontrada.');
             const warehouseId = warehouses[0].id;
-            const [emissionPoints] = await conn.query(`SELECT ep.id, ep.currentSequence 
+            const [emissionPoints] = await conn.query(`SELECT ep.id, ep.currentSequence AS "currentSequence" 
          FROM emission_points ep 
          JOIN establishments e ON ep.establishmentId = e.id 
          WHERE ep.code = ? AND e.code = ? FOR UPDATE`, [dto.emissionPointCode, dto.establishmentCode]);

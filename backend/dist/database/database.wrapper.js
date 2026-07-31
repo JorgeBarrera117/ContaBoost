@@ -7,17 +7,31 @@ class PostgresPoolWrapper {
     constructor(connectionString) {
         this.pool = new pg_1.Pool({ connectionString });
     }
-    formatQuery(sql) {
-        let index = 1;
-        return sql.replace(/\?/g, () => `$${index++}`);
+    prepareQuery(sql, params = []) {
+        let text = sql;
+        let values = params;
+        if (params.length === 1 && Array.isArray(params[0]) && params[0].length > 0 && Array.isArray(params[0][0])) {
+            const rows = params[0];
+            let index = 1;
+            const placeholders = rows.map((row) => {
+                const rowPlaceholders = row.map(() => `$${index++}`).join(', ');
+                return `(${rowPlaceholders})`;
+            }).join(', ');
+            text = sql.replace(/\?/g, placeholders);
+            values = rows.flat();
+        }
+        else {
+            let index = 1;
+            text = sql.replace(/\?/g, () => `$${index++}`);
+        }
+        if (text.trim().toUpperCase().startsWith('INSERT ')) {
+            text += ' RETURNING *';
+        }
+        return { text, values };
     }
     async query(sql, params = []) {
-        const pgSql = this.formatQuery(sql);
-        let finalSql = pgSql;
-        if (sql.trim().toUpperCase().startsWith('INSERT ')) {
-            finalSql += ' RETURNING *';
-        }
-        const result = await this.pool.query(finalSql, params);
+        const { text, values } = this.prepareQuery(sql, params);
+        const result = await this.pool.query(text, values);
         if (sql.trim().toUpperCase().startsWith('INSERT ')) {
             const insertId = result.rows[0]?.id || null;
             return [{ insertId }];
@@ -28,12 +42,8 @@ class PostgresPoolWrapper {
         const client = await this.pool.connect();
         return {
             query: async (sql, params = []) => {
-                let index = 1;
-                let pgSql = sql.replace(/\?/g, () => `$${index++}`);
-                if (sql.trim().toUpperCase().startsWith('INSERT ')) {
-                    pgSql += ' RETURNING *';
-                }
-                const result = await client.query(pgSql, params);
+                const { text, values } = this.prepareQuery(sql, params);
+                const result = await client.query(text, values);
                 if (sql.trim().toUpperCase().startsWith('INSERT ')) {
                     const insertId = result.rows[0]?.id || null;
                     return [{ insertId }];

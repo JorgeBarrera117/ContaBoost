@@ -1,7 +1,7 @@
 export declare class PostgresPoolWrapper {
     private pool;
     constructor(connectionString: string);
-    private formatQuery;
+    private prepareQuery;
     query<T = any>(sql: string, params?: any[]): Promise<[T]>;
     getConnection(): Promise<{
         query: <T = any>(sql: string, params?: any[]) => Promise<[T]>;

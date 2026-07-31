@@ -21,25 +21,19 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [token, setToken] = useState<string | null>(null);
-  const [user, setUser] = useState<User | null>(null);
-  const [roles, setRoles] = useState<string[]>([]);
-  const [permisos, setPermisos] = useState<string[]>([]);
-
-  useEffect(() => {
-    // Al cargar, revisar si hay sesión guardada
-    const storedToken = localStorage.getItem('token');
-    const storedUser = localStorage.getItem('user');
-    const storedRoles = localStorage.getItem('roles');
-    const storedPermisos = localStorage.getItem('permisos');
-
-    if (storedToken && storedUser && storedRoles && storedPermisos) {
-      setToken(storedToken);
-      setUser(JSON.parse(storedUser));
-      setRoles(JSON.parse(storedRoles));
-      setPermisos(JSON.parse(storedPermisos));
-    }
-  }, []);
+  const [token, setToken] = useState<string | null>(() => localStorage.getItem('token'));
+  const [user, setUser] = useState<User | null>(() => {
+    const stored = localStorage.getItem('user');
+    return stored ? JSON.parse(stored) : null;
+  });
+  const [roles, setRoles] = useState<string[]>(() => {
+    const stored = localStorage.getItem('roles');
+    return stored ? JSON.parse(stored) : [];
+  });
+  const [permisos, setPermisos] = useState<string[]>(() => {
+    const stored = localStorage.getItem('permisos');
+    return stored ? JSON.parse(stored) : [];
+  });
 
   const login = (newToken: string, newUser: User, newRoles: string[], newPermisos: string[]) => {
     setToken(newToken);

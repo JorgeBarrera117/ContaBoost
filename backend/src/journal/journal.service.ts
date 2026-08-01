@@ -65,14 +65,14 @@ export class JournalService {
   async findAll() {
     // Para replicar la respuesta anidada de Prisma, necesitamos armar el objeto manualmente
     const [entries] = await this.pool.query<RowDataPacket[]>(
-      `SELECT je.*, u.nombre as "userName" 
+      `SELECT je.id, je.date, je.description, je.reference, je.userId AS "userId", je.invoiceId AS "invoiceId", je.purchaseId AS "purchaseId", je.createdAt AS "createdAt", je.updatedAt AS "updatedAt", u.nombre as "userName" 
        FROM journal_entries je
        LEFT JOIN usuarios u ON je.userId = u.id
        ORDER BY je.date DESC`
     );
 
     const [lines] = await this.pool.query<RowDataPacket[]>(
-      `SELECT jl.*, a.name as "accountName", a.code as "accountCode"
+      `SELECT jl.id, jl.journalEntryId AS "journalEntryId", jl.accountId AS "accountId", jl.debit, jl.credit, jl.description, jl.isDeleted AS "isDeleted", jl.createdAt AS "createdAt", jl.updatedAt AS "updatedAt", a.name as "accountName", a.code as "accountCode"
        FROM journal_lines jl
        JOIN accounts a ON jl.accountId = a.id`
     );

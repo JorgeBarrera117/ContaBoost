@@ -12,13 +12,17 @@ export class ReportsService {
     if (startDate || endDate) {
       if (startDate && endDate) {
         dateFilter = 'AND je.date >= ? AND je.date <= ?';
-        queryParams.push(new Date(startDate), new Date(endDate));
+        const end = new Date(endDate);
+        end.setUTCHours(23, 59, 59, 999);
+        queryParams.push(new Date(startDate), end);
       } else if (startDate) {
         dateFilter = 'AND je.date >= ?';
         queryParams.push(new Date(startDate));
       } else if (endDate) {
         dateFilter = 'AND je.date <= ?';
-        queryParams.push(new Date(endDate));
+        const end = new Date(endDate);
+        end.setUTCHours(23, 59, 59, 999);
+        queryParams.push(end);
       }
     }
 
@@ -88,13 +92,17 @@ export class ReportsService {
     if (startDate || endDate) {
       if (startDate && endDate) {
         dateFilter = 'AND je.date >= ? AND je.date <= ?';
-        queryParams.push(new Date(startDate), new Date(endDate));
+        const end = new Date(endDate);
+        end.setUTCHours(23, 59, 59, 999);
+        queryParams.push(new Date(startDate), end);
       } else if (startDate) {
         dateFilter = 'AND je.date >= ?';
         queryParams.push(new Date(startDate));
       } else if (endDate) {
         dateFilter = 'AND je.date <= ?';
-        queryParams.push(new Date(endDate));
+        const end = new Date(endDate);
+        end.setUTCHours(23, 59, 59, 999);
+        queryParams.push(end);
       }
     }
 
@@ -167,7 +175,9 @@ export class ReportsService {
 
     if (endDate) {
       dateFilter = 'AND je.date <= ?';
-      queryParams.push(new Date(endDate));
+      const end = new Date(endDate);
+      end.setUTCHours(23, 59, 59, 999);
+      queryParams.push(end);
     }
 
     const query = `
